@@ -36,23 +36,18 @@ func main() {
 
 	scanner := bufio.NewScanner(file)
 	var result int
+	count := 0
+	var lines []string
 	for scanner.Scan() {
 		line := scanner.Text()
-		needles, haystack := split_line(&line)
-		match, err := common_letter(needles, haystack)
-		if err != nil {
-			log.Fatal(err)
-		}
+		count++
+		if count == 3 {
+			// look for badge
 
-		charCodeAt := int(match[0])
-
-		if charCodeAt < 97 {
-			result += charCodeAt - 38
-		} else {
-			result += charCodeAt - 96
+			count = 0
+			lines = nil
 		}
 	}
 
 	fmt.Println(result)
-
 }
