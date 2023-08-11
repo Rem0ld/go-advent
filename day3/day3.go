@@ -29,6 +29,16 @@ func common_letter(needles []string, haystack string) (string, error) {
 	return "", errors.New("No match")
 }
 
+func char_code_at(c string) int {
+	charCodeAt := int(c[0])
+
+	if charCodeAt < 97 {
+		return charCodeAt - 38
+	} else {
+		return charCodeAt - 96
+	}
+}
+
 func main() {
 	file, err := os.Open("./file")
 	if err != nil {
@@ -43,12 +53,11 @@ func main() {
 
 	for scanner.Scan() {
 		line := scanner.Text()
-		if count == 0 {
-			fmt.Println("longest should be nil", longest)
-		}
 
 		if len(line) > len(longest) {
-			lines = append(lines, strings.Join(longest, ""))
+			if longest != nil {
+				lines = append(lines, strings.Join(longest, ""))
+			}
 			longest = strings.Split(line, "")
 		} else {
 			lines = append(lines, line)
@@ -59,13 +68,10 @@ func main() {
 		if count == 3 {
 			slices.Sort(longest)
 			longest = slices.Compact(longest)
-			fmt.Println(longest)
 
 			for _, val := range longest {
-				fmt.Println(val, int(val[0]))
 				if strings.Contains(lines[0], val) && strings.Contains(lines[1], val) {
-					fmt.Println(val, int(val[0]))
-					result += int(val[0])
+					result += char_code_at(val)
 					break
 				}
 			}
