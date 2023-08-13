@@ -5,13 +5,13 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"slices"
 	"strconv"
 	"strings"
 )
 
 type Section struct {
-	left  int
-	right int
+	list  []int
 	count int
 }
 
@@ -39,19 +39,19 @@ func NewSection(str string) Section {
 
 	count := 0
 
+	list := make([]int, 0)
 	for i := first; i <= second; i++ {
+		list = append(list, i)
 		count++
 	}
 
 	return Section{
-		left:  first,
-		right: second,
+		list:  list,
 		count: count,
 	}
 }
 
 func NewSections(str []string) Sections {
-
 	first := NewSection(str[0])
 	second := NewSection(str[1])
 
@@ -64,21 +64,16 @@ func NewSections(str []string) Sections {
 func (s *Sections) Compare() int {
 	first := s.first
 	second := s.second
+	result := 0
 
-	switch true {
-	case first.count < second.count:
-		if first.left >= second.left && first.right <= second.right {
-			fmt.Println(first, second)
-			return 1
-		}
-	case second.count < first.count:
-		if second.left >= first.left && second.right <= first.right {
-			fmt.Println(first, second)
-			return 1
+	for _, val := range first.list {
+		if slices.Contains(second.list, val) {
+			result++
+			break
 		}
 	}
 
-	return 0
+	return result
 }
 
 func main() {
